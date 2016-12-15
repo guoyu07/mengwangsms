@@ -178,9 +178,9 @@ class Mengwang {
           }
 
           let reports = null;
-          if (response === null ||
-            response.MongateGetDeliverResult === null ||
-            response.MongateGetDeliverResult.string === null
+          if (response === null
+            || response.MongateGetDeliverResult === null
+            || response.MongateGetDeliverResult.string === null
           ) {
             reports = [];
           } else if (_.isArray(response.MongateGetDeliverResult.string)) {
