@@ -1,5 +1,5 @@
 {
-  "name": "mengwang",
+  "name": "mengwangsms",
   "description": "梦网短信发送接口",
   "main": "lib/index.js",
   "scripts": {
@@ -11,7 +11,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/soulwu/mengwang.git"
+    "url": "https://github.com/poloxue/mengwang.git"
   },
   "files": [
     "lib/*",
@@ -23,12 +23,12 @@
     "短信",
     "接口"
   ],
-  "author": "soulwu",
+  "author": "soulwu,poloxue",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/soulwu/mengwang/issues"
+    "url": "https://github.com/poloxue/mengwangsms/issues"
   },
-  "homepage": "https://github.com/soulwu/mengwang#readme",
+  "homepage": "https://github.com/poloxue/mengwangsms#readme",
   "engines": {
     "node": ">=4"
   },
