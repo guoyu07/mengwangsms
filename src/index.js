@@ -1,6 +1,8 @@
 import soap from 'soap';
 import _ from 'lodash';
 
+const ERROR_FORMAT = 601;
+
 class Mengwang {
   static errMap = {
     '-1': '参数为空。信息、电话号码等有空指针，登陆失败',
@@ -128,7 +130,7 @@ class Mengwang {
 
           if (response && Math.abs(response.MongateCsSpSendSmsNewResult) > 999) {
             this._logger(`Call mengwang sendSms succ.${logMsg}`);
-            resolve(response.MongateCsSpSendSmsNewResult);
+            resolve({msgid: response.MongateCsSpSendSmsNewResult});
           } else {
             let errMsg = 'unknow error';
             if (response && Mengwang.errMap[response.MongateCsSpSendSmsNewResult]) {
@@ -145,6 +147,65 @@ class Mengwang {
     }, (e) => {
       this._logger(`Get mengwang client failed. err[${e.message}]${logMsg}`);
       throw e;
+    });
+  }
+
+  queryReport() {
+    return this.deferClient.then((client) => {
+      this._logger('Call mengwang queryReport.');
+      const startTime = Date.now();
+      return new Promise((resolve, reject) => {
+        client.MongateGetDeliver({
+          userId: this._username,
+          password: this._userpass,
+          iReqType: 2
+        }, (err, result) => {
+          this._logger(`Call mengwang queryReport complete. elapsedTime[${Date.now() - startTime}]`);
+          if (err) {
+            this._logger(`Call mengwang queryReport failed. err[${err.message}]`);
+            reject(err);
+            return;
+          }
+
+          const response = result;
+          if (response && typeof response.MongateGetDeliverResult === 'undefined') {
+            this._logger('Call mengwang queryReport failed. err[response.string is undefined]');
+            reject({
+              code: ERROR_FORMAT,
+              message: 'response.string is undefined.'
+            });
+            return;
+          }
+
+          let reports = null;
+          if (response === null ||
+            response.MongateGetDeliverResult === null ||
+            response.MongateGetDeliverResult.string === null
+          ) {
+            reports = [];
+          } else if (_.isArray(response.MongateGetDeliverResult.string)) {
+            reports = response.MongateGetDeliverResult.string;
+          } else {
+            reports = [response.MongateGetDeliverResult.string];
+          }
+
+          const smsRecords = [];
+          reports.forEach((report) => {
+            const [, reportTime, msgid, , mobile, , , code, status] = report.split(',');
+            smsRecords.push({
+              msgid,
+              mobile,
+              reportTime,
+              code,
+              status
+            });
+          });
+          resolve({smsRecords});
+        }, {
+          proxy: this._proxy,
+          timeout: this._timeout
+        });
+      });
     });
   }
 }
