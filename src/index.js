@@ -135,7 +135,7 @@ class Mengwang {
             resolve({msgid: code});
           } else {
             let errMsg = 'unknow error';
-            if (response && Mengwang.errMap[code]) {
+            if (Mengwang.errMap[code]) {
               errMsg = Mengwang.errMap[code];
             }
             this._logger(`Call mengwang sendSms err. err[${errMsg}]${logMsg}`);
