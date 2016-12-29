@@ -7,6 +7,7 @@ class Mengwang {
   static errMap = {
     '-1': '参数为空。信息、电话号码等有空指针，登陆失败',
     '-2': '电话号码个数超过100',
+    '-3': '未知原因',
     '-10': '申请缓存空间失败',
     '-11': '电话号码中有非数字字符',
     '-12': '有异常电话号码',
@@ -128,13 +129,14 @@ class Mengwang {
             logMsg += ` result[${JSON.stringify(response)}]`;
           }
 
-          if (response && Math.abs(response.MongateCsSpSendSmsNewResult) > 999) {
+          const code = response ? response.MongateCsSpSendSmsNewResult : -3;
+          if (Mengwang.errMap.indexOf(code) < 0) {
             this._logger(`Call mengwang sendSms succ.${logMsg}`);
-            resolve({msgid: response.MongateCsSpSendSmsNewResult});
+            resolve({msgid: code});
           } else {
             let errMsg = 'unknow error';
-            if (response && Mengwang.errMap[response.MongateCsSpSendSmsNewResult]) {
-              errMsg = Mengwang.errMap[response.MongateCsSpSendSmsNewResult];
+            if (response && Mengwang.errMap[code]) {
+              errMsg = Mengwang.errMap[code];
             }
             this._logger(`Call mengwang sendSms err. err[${errMsg}]${logMsg}`);
             reject(errMsg);
