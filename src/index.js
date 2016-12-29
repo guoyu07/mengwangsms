@@ -128,7 +128,7 @@ class Mengwang {
             logMsg += ` result[${JSON.stringify(response)}]`;
           }
 
-          if (response && Mengwang.errMap.indexOf(response.MongateCsSpSendSmsNewResult) < 0) {
+          if (response && typeof Mengwang.errMap[response.MongateCsSpSendSmsNewResult] === 'undefined') {
             this._logger(`Call mengwang sendSms succ.${logMsg}`);
             resolve({msgid: response.MongateCsSpSendSmsNewResult});
           } else {
