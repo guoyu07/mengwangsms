@@ -191,7 +191,7 @@ class Mengwang {
 
           const smsRecords = [];
           reports.forEach((report) => {
-            const [, reportTime, msgid, , mobile, , , code, status] = report.split(',');
+            const [, reportTime, , , mobile, msgid, , code, status] = report.split(',');
             smsRecords.push({
               msgid,
               mobile,
