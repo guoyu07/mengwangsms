@@ -76,7 +76,7 @@ class Mengwang {
         }
       }, (err, client) => {
         if (err) {
-          this._logger(`Create client failed. err[${err.message}]`);
+          this._logger(`msg[Create client failed] err[${err.message}]`);
           reject(err);
           return;
         }
@@ -101,7 +101,7 @@ class Mengwang {
     }
 
     return this.deferClient.then((client) => {
-      this._logger(`Call mengwang sendSms.${logMsg}`);
+      this._logger(`msg[Call mengwang sendSms] ${logMsg}`);
       const startTime = Date.now();
 
       return new Promise((resolve, reject) => {
@@ -113,9 +113,9 @@ class Mengwang {
           iMobiCount: mobiles.length,
           pszSubPort: this._pszSubPort
         }, (err, result) => {
-          this._logger(`Call mengwang complete. elapsedTime[${Date.now() - startTime}]${logMsg}`);
+          this._logger(`msg[Call mengwang complete] elapsedTime[${Date.now() - startTime}]${logMsg}`);
           if (err) {
-            this._logger(`Call mengwang sendSms failed. err[${err.message}]${logMsg}`);
+            this._logger(`msg[Call mengwang sendSms failed] err[${err.message}]${logMsg}`);
             reject(err);
             return;
           }
@@ -129,14 +129,14 @@ class Mengwang {
           }
 
           if (response && typeof Mengwang.errMap[response.MongateCsSpSendSmsNewResult] === 'undefined') {
-            this._logger(`Call mengwang sendSms succ.${logMsg}`);
+            this._logger(`msg[Call mengwang sendSms succ] ${logMsg}`);
             resolve({msgid: response.MongateCsSpSendSmsNewResult});
           } else {
             let errMsg = 'unknow error';
             if (response && Mengwang.errMap[response.MongateCsSpSendSmsNewResult]) {
               errMsg = Mengwang.errMap[response.MongateCsSpSendSmsNewResult];
             }
-            this._logger(`Call mengwang sendSms err. err[${errMsg}]${logMsg}`);
+            this._logger(`msg[Call mengwang sendSms err] err[${errMsg}] ${logMsg}`);
             reject(errMsg);
           }
         }, {
@@ -145,14 +145,14 @@ class Mengwang {
         });
       });
     }, (e) => {
-      this._logger(`Get mengwang client failed. err[${e.message}]${logMsg}`);
+      this._logger(`msg[Get mengwang client failed] err[${e.message}] ${logMsg}`);
       throw e;
     });
   }
 
   queryReport() {
     return this.deferClient.then((client) => {
-      this._logger('Call mengwang queryReport.');
+      this._logger('msg[Call mengwang queryReport]');
       const startTime = Date.now();
       return new Promise((resolve, reject) => {
         client.MongateGetDeliver({
@@ -160,16 +160,16 @@ class Mengwang {
           password: this._userpass,
           iReqType: 2
         }, (err, result) => {
-          this._logger(`Call mengwang queryReport complete. elapsedTime[${Date.now() - startTime}]`);
+          this._logger(`msg[Call mengwang queryReport complete] elapsedTime[${Date.now() - startTime}]`);
           if (err) {
-            this._logger(`Call mengwang queryReport failed. err[${err.message}]`);
+            this._logger(`msg[Call mengwang queryReport failed] err[${err.message}]`);
             reject(err);
             return;
           }
 
           const response = result;
           if (response && typeof response.MongateGetDeliverResult === 'undefined') {
-            this._logger('Call mengwang queryReport failed. err[response.string is undefined]');
+            this._logger('msg[Call mengwang queryReport failed] err[response.string is undefined]');
             reject({
               code: ERROR_FORMAT,
               message: 'response.string is undefined.'
