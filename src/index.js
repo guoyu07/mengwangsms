@@ -1,5 +1,6 @@
 import soap from 'soap';
 import _ from 'lodash';
+import {uniqId} from './util';
 
 const ERROR_FORMAT = 601;
 
@@ -105,13 +106,15 @@ class Mengwang {
       const startTime = Date.now();
 
       return new Promise((resolve, reject) => {
-        client.MongateCsSpSendSmsNew({
+        const msgId = uniqId();
+        client.MongateSendSubmit({
           userId: this._username,
           password: this._userpass,
           pszMobis: mobiles.join(','),
           pszMsg: content,
           iMobiCount: mobiles.length,
-          pszSubPort: this._pszSubPort
+          pszSubPort: this._pszSubPort,
+          MsgId: msgId
         }, (err, result) => {
           this._logger(`msg[Call mengwang complete] elapsedTime[${Date.now() - startTime}]${logMsg}`);
           if (err) {
@@ -129,8 +132,8 @@ class Mengwang {
           }
 
           if (response && typeof Mengwang.errMap[response.MongateCsSpSendSmsNewResult] === 'undefined') {
-            this._logger(`msg[Call mengwang sendSms succ] ${logMsg}`);
-            resolve({msgid: response.MongateCsSpSendSmsNewResult});
+            this._logger(`msg[Call mengwang sendSms succ] spMsgId[${response.MongateCsSpSendSmsNewResult}] ${logMsg}`);
+            resolve({msgid: msgId});
           } else {
             let errMsg = 'unknow error';
             if (response && Mengwang.errMap[response.MongateCsSpSendSmsNewResult]) {
