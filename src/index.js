@@ -131,13 +131,13 @@ class Mengwang {
             logMsg += ` result[${JSON.stringify(response)}]`;
           }
 
-          if (response && typeof Mengwang.errMap[response.MongateCsSpSendSmsNewResult] === 'undefined') {
-            this._logger(`msg[Call mengwang sendSms succ] spMsgId[${response.MongateCsSpSendSmsNewResult}] ${logMsg}`);
+          if (response && typeof Mengwang.errMap[response.MongateSendSubmitResult] === 'undefined') {
+            this._logger(`msg[Call mengwang sendSms succ] spMsgId[${response.MongateSendSubmitResult}] ${logMsg}`);
             resolve({msgid: msgId});
           } else {
             let errMsg = 'unknow error';
-            if (response && Mengwang.errMap[response.MongateCsSpSendSmsNewResult]) {
-              errMsg = Mengwang.errMap[response.MongateCsSpSendSmsNewResult];
+            if (response && Mengwang.errMap[response.MongateSendSubmitResult]) {
+              errMsg = Mengwang.errMap[response.MongateSendSubmitResult];
             }
             this._logger(`msg[Call mengwang sendSms err] err[${errMsg}] ${logMsg}`);
             reject(errMsg);
